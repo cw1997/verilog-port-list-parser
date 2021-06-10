@@ -25,24 +25,13 @@ space [ \t]+
 
 port_direction input|output|inout
 
-number_integer {digit}+({digit}|{underline})*{digit}*
-number_with_bit_length {digit}+\'(h|d|o|b){number_integer}
-
 bit_slice \[{number_integer}:{number_integer}\]
 
 id ({underline}|{letter})+({underline}|{letter}|{digit})*
 
 %%
 "," { return COMMA; }
-
-{number_integer} {
-    yylval = strdup(yytext);
-    return NUMBER_INTEGER;
-}
-{number_with_bit_length} {
-    yylval = strdup(yytext);
-    return NUMBER_WITH_BIT_LENGTH;
-}
+";" { return SEMICOLON; }
 
 {port_direction} {
     yylval = strdup(yytext);
@@ -67,7 +56,7 @@ id ({underline}|{letter})+({underline}|{letter}|{digit})*
 }
 
 . {
-    // printf(".: %s\n", yytext);
+    printf("unexcepted symbol: %s\n", yytext);
     ++num_col;
     // return ANY;
 };

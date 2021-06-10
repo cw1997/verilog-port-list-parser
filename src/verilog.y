@@ -45,33 +45,37 @@ void yyerror(const char *msg) {
 // int int_value;
 // double double_value;
 // }
-%token ANY
-%token ID 
-%token PORT_DIRECTION 
-%token NUMBER_INTEGER NUMBER_WITH_BIT_LENGTH
-%left  COMMA SPACE CRLF 
+// %token ANY
+%left ID 
+%left PORT_DIRECTION 
+// %token NUMBER_INTEGER NUMBER_WITH_BIT_LENGTH
+%left COMMA SEMICOLON//SPACE CRLF 
 %%
-start: port_list { printf("[start] port_list\n"); }
-;
+// start: port_list { printf("[start] port_list\n"); }
+// ;
+
+// port_list      -> port_list COMMA port_item
+//                 | port_item
+// port_item      -> direction port_name_list
+// port_name_list -> port_name_list COMMA ID
+//                 | ID
 
 port_list:
-  port_item 
-  { printf("[accept] one port : %s\n", $1); }
-| port_list COMMA port_item 
+  port_item SEMICOLON port_list
   { printf("[parser] port_list -> port_item 1 : %s , port_item 2 : %s \n", $1, $3); }
+| port_item 
+  { printf("[accept] one port : %s\n", $1); }
 | /* empty */ { printf("[empty] port_list empty\n"); }
 ;
 
-port_item:
-  PORT_DIRECTION port_name_list 
-  { printf("[accept] one port direction : %s , name : %s \n", $1, $2); }
+port_item: PORT_DIRECTION port_name_list 
+{ printf("[accept] one port direction : %s , name : %s \n", $1, $2); }
 ;
 
-port_name_list:
-  ID 
-  { printf("[accept] one port name : %s \n", $1); }
-| port_name_list COMMA ID 
-  { printf("[parser] port_name_list : %s , port_name_list : %s \n", $1, $3); }
+port_name_list: ID 
+{ printf("[accept] one port name : %s \n", $1); }
+| ID COMMA port_name_list
+{ printf("[parser] port_name_list : %s , port_name_list : %s \n", $1, $3); }
 ;
 
 %%
