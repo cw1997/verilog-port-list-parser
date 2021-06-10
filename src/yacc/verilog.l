@@ -31,7 +31,7 @@ id ({underline}|{letter})+({underline}|{letter}|{digit})*
 
 %%
 "," { return COMMA; }
-";" { return SEMICOLON; }
+// ";" { return SEMICOLON; }
 
 {port_direction} {
     yylval = strdup(yytext);
